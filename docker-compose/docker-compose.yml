@@ -1,0 +1,11 @@
+version: '3.1'
+services:
+  db:
+    image: postgres:9-alpine
+    env_file:
+      - database.env
+    volumes:
+      - database-data:/var/lib/postgresql/data
+
+volumes:
+  database-data:
