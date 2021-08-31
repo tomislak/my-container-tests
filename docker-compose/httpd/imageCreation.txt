@@ -1,0 +1,24 @@
+httpd image creation:
+
+etokral@ubuntu2004gui:httpd$ ls -la
+total 36
+drwxrwxr-x 2 etokral etokral  4096 kol  31 10:32 .
+drwxrwxr-x 4 etokral etokral  4096 kol  24 12:32 ..
+-rw-r--r-- 1 etokral etokral    95 kol  31 10:13 cgi.conf
+-rw-rw-r-- 1 etokral etokral   236 kol  31 10:14 Dockerfile
+-rwxr-xr-x 1 etokral etokral   387 kol  31 10:14 hostDateNoDb.py
+
+etokral@ubuntu2004gui:httpd$ cat Dockerfile
+FROM centos/httpd-24-centos8
+USER root
+RUN dnf install -y python38.x86_64
+RUN pip3 install psycopg2-binary
+ADD ./cgi.conf /etc/httpd/conf.d/cgi.conf
+ADD ./hostDateNoDb.py /var/www/cgi-bin/hostDate.py
+EXPOSE 8080
+USER 1001
+CMD run-httpd
+
+etokral@ubuntu2004gui:httpd$ docker build -t httpd-python38-psycopg2_b -f Dockerfile .
+
+etokral@ubuntu2004gui:httpd$ docker run --rm -p 80:8080 httpd-python38-psycopg2_b
